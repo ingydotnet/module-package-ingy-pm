@@ -22,6 +22,7 @@ sub main {
     $self->mi->readme_from($self->pod_or_pm_file);
     $self->mi->ack_xxx;
     $self->all_from($self->pm_file);
+    $self->mi->requires_from($self->pm_file);
     $self->mi->version_check;
     $self->mi->stardoc_clean_pod;
 }
