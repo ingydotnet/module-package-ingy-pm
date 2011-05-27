@@ -3,17 +3,22 @@
 # abstract:  Ingy's Module::Package Plugins
 # author:    Ingy döt Net <ingy@ingy.net>
 # license:   perl
-# copyright: 2010
+# copyright: 2011
 
 package Module::Package::Ingy;
 use strict;
 use 5.008003;
+use Module::Package 0.12 ();
+use Module::Install::AckXXX 0.11 ();
+use Module::Install::ReadmeFromPod 0.12 ();
+use Module::Install::Stardoc 0.13 ();
+use Module::Install::VersionCheck 0.11 ();
 
 our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
-use Moo 0.009007;
+use Moo;
 extends 'Module::Package::Plugin';
 
 sub main {
@@ -24,14 +29,17 @@ sub main {
     $self->all_from($self->pm_file);
     $self->mi->requires_from($self->pm_file);
     $self->mi->version_check;
+    $self->check_use_test_base;
+    $self->check_use_testml;
     $self->mi->stardoc_clean_pod;
+    $self->strip_extra_comments;
 }
 
 =head1 SYNOPSIS
 
 In your Makefile.PL:
 
-    use inc::Module::Package 'Ingy';
+    use inc::Module::Package 'Ingy:modern';
 
 =head1 DESCRIPTION
 
@@ -40,17 +48,25 @@ Makefile.PLs, used by Ingy döt Net. You don't have to be Ingy to use it. If
 you write a lot of CPAN modules, you might want to copy or subclass it under a
 name matching your own CPAN id.
 
-=head1 AUTHOR
+=head1 FLAVORS
 
-Ingy döt Net <ingy@cpan.org>
+Currently this module only defines the C<:modern> flavor.
 
-=head1 COPYRIGHT AND LICENSE
+=head2 :modern
 
-Copyright (c) 2011. Ingy döt Net.
+In addition to the inherited behavior, this flavor uses the following plugins:
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+    - Stardoc
+    - ReadmeFromPod
+    - AckXXX
+    - VersionCheck
 
-See http://www.perl.com/perl/misc/Artistic.html
+It also conditionally uses these plugins if you need them:
 
-=cut
+    - TestBase
+    - TestML
+
+=head1 OPTIONS
+
+This module does not add any usage options of than the ones inherited from
+L<Module::Package::Plugin>.
