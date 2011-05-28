@@ -1,4 +1,9 @@
 ---
+version: 0.02
+date:    Sat May 28 15:02:24 EST 2011
+changes:
+- Repackage with Module::Package 0.14 required.
+---
 version: 0.01
 date:    Sat May 28 01:18:18 EST 2011
 changes:

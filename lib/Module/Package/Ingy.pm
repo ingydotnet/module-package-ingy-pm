@@ -14,7 +14,7 @@ use Module::Install::ReadmeFromPod 0.12 ();
 use Module::Install::Stardoc 0.13 ();
 use Module::Install::VersionCheck 0.11 ();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
