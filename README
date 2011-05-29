@@ -33,6 +33,9 @@ OPTIONS
     This module does not add any usage options of than the ones inherited
     from Module::Package::Plugin.
 
+SEE ALSO
+    *   Module::Package
+
 AUTHOR
     Ingy döt Net <ingy@ingy.net>
 

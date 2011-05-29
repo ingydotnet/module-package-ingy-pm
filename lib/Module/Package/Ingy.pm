@@ -4,6 +4,8 @@
 # author:    Ingy döt Net <ingy@ingy.net>
 # license:   perl
 # copyright: 2011
+# see:
+# - Module::Package
 
 package Module::Package::Ingy;
 use strict;
@@ -14,7 +16,7 @@ use Module::Install::ReadmeFromPod 0.12 ();
 use Module::Install::Stardoc 0.13 ();
 use Module::Install::VersionCheck 0.11 ();
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -24,15 +26,15 @@ extends 'Module::Package::Plugin';
 sub main {
     my ($self) = @_;
     $self->mi->stardoc_make_pod;
+    $self->mi->stardoc_clean_pod;
     $self->mi->readme_from($self->pod_or_pm_file);
-    $self->mi->ack_xxx;
-    $self->all_from($self->pm_file);
-    $self->mi->requires_from($self->pm_file);
-    $self->mi->version_check;
     $self->check_use_test_base;
     $self->check_use_testml;
-    $self->mi->stardoc_clean_pod;
     $self->strip_extra_comments;
+    $self->mi->ack_xxx;
+#     $self->mi->sign;
+
+    $self->post_all_from(sub {$self->mi->version_check});
 }
 
 =head1 SYNOPSIS
