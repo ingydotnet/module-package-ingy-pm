@@ -55,7 +55,7 @@ release::
 package Module::Package::Ingy;
 
 # This is Ingy's personal release process. It probably won't match your own.
-# It requires a YAML Changes file and git.
+# It requires a YAML Changes file and git and tagged releases and other stuff.
 sub make_release {
     my $class = shift or die;
     die "make release expects this to be a git repo\n\n"
@@ -96,7 +96,7 @@ sub make_release {
     system("make test") == 0 or die;
     system("sudo make install") == 0 or die;
     system("make manifest") == 0 or die;
-#     system("make upload") == 0 or die;
+    system("make upload") == 0 or die;
     system("make purge") == 0 or die;
     io('Changes')->print($Changes);
     system(qq{git commit -a -m "Released version $module_version"}) == 0 or die;
