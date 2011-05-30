@@ -1,6 +1,6 @@
 ---
 version: 0.05
-date:    Mon May 30 20:11:53 EST 2011
+date:    Mon May 30 20:14:21 EST 2011
 changes:
 - Add 'make release' support.
 ---

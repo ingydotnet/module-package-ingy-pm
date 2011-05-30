@@ -104,7 +104,8 @@ sub make_release {
     system("git push") == 0 or die;
     system("git push --tag") == 0 or die;
     $status = `git status`;
-    print "\n>$status<\n";
+    die "git status is not clean:\n\n$status"
+        unless $status =~ /\(working directory clean\)/;
 
     print <<"...";
 
