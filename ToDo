@@ -1,0 +1,25 @@
+- Add 'make release' support.
+
+
+== make release
+- yaml.load 'Changes'
+- Look at top entry
+- Should look like:
+    version: 0.12
+    date:    
+    changes: ...
+- This means ready for release.
+- Make sure the version # in Changes $PM and git tag look right.
+- Fill in the date in Changes file
+- perl Makefile.PL
+- make test
+- sudo make install
+- make manifest
+- make upload
+- make purge
+- gciam $VERSION
+- git tag $VERSION
+- git push
+- git push --tags
+- check git status
+- print summary :)
