@@ -18,7 +18,7 @@ use Module::Install::VersionCheck 0.13 ();
 use IO::All 0.41;
 use YAML::XS 0.35 ();
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -54,6 +54,12 @@ release::
 
 package Module::Package::Ingy;
 
+sub run {
+    my $cmd = shift;
+    warn ">> make release >> $cmd\n";
+    system($cmd) == 0 or @_ or die "Error: '$cmd' failed\n";
+}
+
 # This is Ingy's personal release process. It probably won't match your own.
 # It requires a YAML Changes file and git and tagged releases and other stuff.
 sub make_release {
@@ -87,22 +93,32 @@ sub make_release {
     chomp $date;
     my $Changes = io('Changes')->all;
     $Changes =~ s/date: *\n/date:    $date\n/ or die;
-    system("perl Makefile.PL") == 0 or die;
-    system("make purge") == 0 or die;
+
+    run "perl -Ilib Makefile.PL";
+    run "make purge";
     my $status = `git status`;
     die "You have untracked files:\n\n$status"
         if $status =~ m!Untracked!;
-    system("perl Makefile.PL") == 0 or die;
-    system("make test") == 0 or die;
-    system("sudo make install") == 0 or die;
-    system("make manifest") == 0 or die;
-    system("make upload") == 0 or die;
-    system("make purge") == 0 or die;
+
+    run "perl -Ilib Makefile.PL";
+    run "make test";
+    run "make purge";
+
+    run "perl -Ilib Makefile.PL";
+    run "make";
+    run "sudo make install";
+    run "make purge";
+
     io('Changes')->print($Changes);
-    system(qq{git commit -a -m "Released version $module_version"}) == 0 or die;
-    system("git tag $module_version") == 0 or die;
-    system("git push") == 0 or die;
-    system("git push --tag") == 0 or die;
+    run "perl -Ilib Makefile.PL";
+    run "make manifest";
+    run "make upload";
+    run "make purge";
+
+    run qq{git commit -a -m "Released version $module_version"};
+    run "git tag $module_version";
+    run "git push";
+    run "git push --tag";
     $status = `git status`;
     die "git status is not clean:\n\n$status"
         unless $status =~ /\(working directory clean\)/;
