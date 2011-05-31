@@ -1,4 +1,9 @@
 ---
+version: 0.07
+date:    Tue May 31 20:32:11 EST 2011
+changes:
+- Forgot to change the Makefile.PL call to the new style.
+---
 version: 0.06
 date:    Tue May 31 20:28:28 EST 2011
 changes:

@@ -18,7 +18,7 @@ use Module::Install::VersionCheck 0.13 ();
 use IO::All 0.41;
 use YAML::XS 0.35 ();
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
