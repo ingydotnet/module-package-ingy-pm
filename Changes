@@ -1,4 +1,10 @@
 ---
+version: 0.06
+date:    Tue May 31 20:28:28 EST 2011
+changes:
+- Clean up make release script
+- Release with new Module::Package
+---
 version: 0.05
 date:    Mon May 30 20:26:45 EST 2011
 changes:
