@@ -10,15 +10,15 @@
 package Module::Package::Ingy;
 use strict;
 use 5.008003;
-use Module::Package 0.17 ();
-use Module::Install::AckXXX 0.15 ();
+use Module::Package 0.21 ();
+use Module::Install::AckXXX 0.16 ();
 use Module::Install::ReadmeFromPod 0.12 ();
 use Module::Install::Stardoc 0.13 ();
-use Module::Install::VersionCheck 0.13 ();
+use Module::Install::VersionCheck 0.14 ();
 use IO::All 0.41;
 use YAML::XS 0.35 ();
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -28,6 +28,8 @@ use IO::All;
 
 sub main {
     my ($self) = @_;
+
+    # These run before the Makefile.PL body. (During use inc::...)
     $self->mi->stardoc_make_pod;
     $self->mi->stardoc_clean_pod;
     $self->mi->readme_from($self->pod_or_pm_file);
@@ -35,21 +37,28 @@ sub main {
     $self->check_use_testml;
     $self->strip_extra_comments;
     $self->mi->ack_xxx;
-#     $self->mi->sign;
+#     $self->mi->sign;  # XXX need to learn more about this
 
+    # These run later, as specified.
     $self->post_all_from(sub {$self->mi->version_check});
+    $self->post_all_from(sub {$self->check_github_repository});
     $self->post_WriteAll(sub {$self->make_release});
 }
 
+sub check_github_repository {
+    my ($self) = @_;
+    -d '.git' or return;
+    `git remote -v` =~ /\bgit\@github.com:(\S+)/ or return;
+    $self->mi->repository("git://github.com/$1");
+}
+
 sub make_release {
-    my $makefile = io('Makefile')->all;
-    $makefile .= <<'...';
+    io('Makefile')->append(<<'...');
 
 release::
 	$(PERL) "-Ilib" "-MModule::Package::Ingy" -e "Module::Package::Ingy->make_release()"
 
 ...
-    io('Makefile')->print($makefile);
 }
 
 package Module::Package::Ingy;
