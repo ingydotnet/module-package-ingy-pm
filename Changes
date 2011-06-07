@@ -1,4 +1,10 @@
 ---
+version: 0.09
+date:    Tue Jun  7 17:35:38 EST 2011
+changes:
+- Release with Module::Package 0.22.
+- Make release purge after upload quiet so I can see the upload result.
+---
 version: 0.08
 date:    Mon Jun  6 01:01:32 EST 2011
 changes:

@@ -10,15 +10,16 @@
 package Module::Package::Ingy;
 use strict;
 use 5.008003;
-use Module::Package 0.21 ();
+use Module::Package 0.22 ();
 use Module::Install::AckXXX 0.16 ();
 use Module::Install::ReadmeFromPod 0.12 ();
 use Module::Install::Stardoc 0.13 ();
 use Module::Install::VersionCheck 0.14 ();
 use IO::All 0.41;
 use YAML::XS 0.35 ();
+use Capture::Tiny 0.10;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -62,6 +63,7 @@ release::
 }
 
 package Module::Package::Ingy;
+use Capture::Tiny qw(capture);
 
 sub run {
     my $cmd = shift;
@@ -122,7 +124,7 @@ sub make_release {
     run "perl -Ilib Makefile.PL";
     run "make manifest";
     run "make upload";
-    run "make purge";
+    capture { run "make purge" };
 
     run qq{git commit -a -m "Released version $module_version"};
     run "git tag $module_version";
