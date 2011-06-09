@@ -1,4 +1,9 @@
 ---
+version: 0.10
+date:    Fri Jun 10 01:45:35 EST 2011
+changes:
+- Make release quieter.
+---
 version: 0.09
 date:    Tue Jun  7 17:35:38 EST 2011
 changes:

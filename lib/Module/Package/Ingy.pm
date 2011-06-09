@@ -17,9 +17,9 @@ use Module::Install::Stardoc 0.13 ();
 use Module::Install::VersionCheck 0.14 ();
 use IO::All 0.41;
 use YAML::XS 0.35 ();
-use Capture::Tiny 0.10;
+use Capture::Tiny 0.10 ();
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -63,12 +63,20 @@ release::
 }
 
 package Module::Package::Ingy;
-use Capture::Tiny qw(capture);
+use Capture::Tiny qw(capture_merged);
 
 sub run {
     my $cmd = shift;
-    warn ">> make release >> $cmd\n";
-    system($cmd) == 0 or @_ or die "Error: '$cmd' failed\n";
+    my %options = map {($_, 1)} @_;
+    warn "******** >> $cmd ********\n";
+    my $error;
+    my $output = capture_merged {
+        system($cmd) == 0 or $error = 1;
+    };
+    print $output unless $options{-quiet};
+    if ($error) {
+        die "\nError. Command failed:\n$output";
+    }
 }
 
 # This is Ingy's personal release process. It probably won't match your own.
@@ -105,34 +113,35 @@ sub make_release {
     my $Changes = io('Changes')->all;
     $Changes =~ s/date: *\n/date:    $date\n/ or die;
 
-    run "perl -Ilib Makefile.PL";
-    run "make purge";
+    run "perl -Ilib Makefile.PL", -quiet;
+    run "make purge", -quiet;
     my $status = `git status`;
     die "You have untracked files:\n\n$status"
         if $status =~ m!Untracked!;
 
-    run "perl -Ilib Makefile.PL";
-    run "make test";
-    run "make purge";
+    run "perl -Ilib Makefile.PL", -quiet;
+    run "make test", -quiet;
+    run "make purge", -quiet;
 
-    run "perl -Ilib Makefile.PL";
-    run "make";
-    run "sudo make install";
-    run "make purge";
+    run "perl -Ilib Makefile.PL", -quiet;
+    run "make", -quiet;
+    run "sudo make install", -quiet;
+    run "make purge", -quiet;
 
     io('Changes')->print($Changes);
-    run "perl -Ilib Makefile.PL";
-    run "make manifest";
-    run "make upload";
-    capture { run "make purge" };
+    run "perl -Ilib Makefile.PL", -quiet;
+    run "make manifest", -quiet;
+    run "make upload", -quiet;
+    run "make purge", -quiet;
 
-    run qq{git commit -a -m "Released version $module_version"};
-    run "git tag $module_version";
-    run "git push";
-    run "git push --tag";
+    run qq{git commit -a -m "Released version $module_version"}, -quiet;
+    run "git tag $module_version", -quiet;
+    run "git push", -quiet;
+    run "git push --tag", -quiet;
     $status = `git status`;
     die "git status is not clean:\n\n$status"
         unless $status =~ /\(working directory clean\)/;
+    run "git status";
 
     print <<"...";
 
