@@ -7,6 +7,10 @@
 # see:
 # - Module::Package
 
+# TODO
+# - Add auto_license
+# - Look at other plugins
+
 package Module::Package::Ingy;
 use strict;
 use 5.008003;
@@ -19,7 +23,7 @@ use IO::All 0.41;
 use YAML::XS 0.35 ();
 use Capture::Tiny 0.10 ();
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -147,7 +151,7 @@ sub make_release {
 
 $meta->{name}-$meta->{version} successfully released.
 
-Relax. Have a beer.
+Relax. Have a beer. \\o/
 
 ...
 }
