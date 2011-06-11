@@ -8,7 +8,7 @@
 # - Module::Package
 
 # TODO
-# - Add auto_license
+# - Look at auto_provides
 # - Look at other plugins
 
 package Module::Package::Ingy;
@@ -16,6 +16,8 @@ use strict;
 use 5.008003;
 use Module::Package 0.22 ();
 use Module::Install::AckXXX 0.16 ();
+use Module::Install::AutoLicense 0.08 ();
+use Module::Install::GithubMeta 0.10 ();
 use Module::Install::ReadmeFromPod 0.12 ();
 use Module::Install::Stardoc 0.13 ();
 use Module::Install::VersionCheck 0.14 ();
@@ -46,15 +48,10 @@ sub main {
 
     # These run later, as specified.
     $self->post_all_from(sub {$self->mi->version_check});
-    $self->post_all_from(sub {$self->check_github_repository});
+    $self->post_all_from(sub {$self->mi->auto_license});
+    $self->post_all_from(sub {$self->mi->clean_files('LICENSE')});
+    $self->post_all_from(sub {$self->mi->githubmeta});
     $self->post_WriteAll(sub {$self->make_release});
-}
-
-sub check_github_repository {
-    my ($self) = @_;
-    -d '.git' or return;
-    `git remote -v` =~ /\bgit\@github.com:(\S+)/ or return;
-    $self->mi->repository("git://github.com/$1");
 }
 
 sub make_release {
