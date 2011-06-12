@@ -19,13 +19,14 @@ use Module::Install::AckXXX 0.16 ();
 use Module::Install::AutoLicense 0.08 ();
 use Module::Install::GithubMeta 0.10 ();
 use Module::Install::ReadmeFromPod 0.12 ();
+use Module::Install::RequiresList 0.10 ();
 use Module::Install::Stardoc 0.13 ();
 use Module::Install::VersionCheck 0.14 ();
 use IO::All 0.41;
 use YAML::XS 0.35 ();
 use Capture::Tiny 0.10 ();
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -51,13 +52,14 @@ sub main {
     $self->post_all_from(sub {$self->mi->auto_license});
     $self->post_all_from(sub {$self->mi->clean_files('LICENSE')});
     $self->post_all_from(sub {$self->mi->githubmeta});
+    $self->post_WriteAll(sub {$self->mi->requires_list});
     $self->post_WriteAll(sub {$self->make_release});
 }
 
 sub make_release {
     io('Makefile')->append(<<'...');
 
-release::
+release ::
 	$(PERL) "-Ilib" "-MModule::Package::Ingy" -e "Module::Package::Ingy->make_release()"
 
 ...

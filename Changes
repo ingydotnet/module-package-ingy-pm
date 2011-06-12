@@ -1,4 +1,9 @@
 ---
+version: 0.12
+date:    Mon Jun 13 00:40:37 EST 2011
+changes:
+- Add Module::Install::RequiresList
+---
 version: 0.11
 date:    Sun Jun 12 03:50:53 EST 2011
 changes:
