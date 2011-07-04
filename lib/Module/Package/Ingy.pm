@@ -11,10 +11,13 @@
 # - Look at auto_provides
 # - Look at other plugins
 
-package Module::Package::Ingy;
-use strict;
 use 5.008003;
-use Module::Package 0.22 ();
+use strict;
+package Module::Package::Ingy;
+
+our $VERSION = '0.13';
+
+use Module::Package 0.26 ();
 use Module::Install::AckXXX 0.16 ();
 use Module::Install::AutoLicense 0.08 ();
 use Module::Install::GithubMeta 0.10 ();
@@ -24,9 +27,7 @@ use Module::Install::Stardoc 0.13 ();
 use Module::Install::VersionCheck 0.14 ();
 use IO::All 0.41;
 use YAML::XS 0.35 ();
-use Capture::Tiny 0.10 ();
-
-our $VERSION = '0.12';
+use Capture::Tiny 0.11 ();
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -43,6 +44,7 @@ sub main {
     $self->mi->readme_from($self->pod_or_pm_file);
     $self->check_use_test_base;
     $self->check_use_testml;
+    $self->check_test_common;
     $self->strip_extra_comments;
     $self->mi->ack_xxx;
 #     $self->mi->sign;  # XXX need to learn more about this
