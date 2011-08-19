@@ -15,19 +15,25 @@ use 5.008003;
 use strict;
 package Module::Package::Ingy;
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
-use Module::Package 0.26 ();
+use Module::Package 0.27 ();
 use Module::Install::AckXXX 0.16 ();
 use Module::Install::AutoLicense 0.08 ();
 use Module::Install::GithubMeta 0.10 ();
+use Module::Install::Gloom 0.16 ();
+# use Module::Install::MetaModule 0.01 ();
 use Module::Install::ReadmeFromPod 0.12 ();
 use Module::Install::RequiresList 0.10 ();
-use Module::Install::Stardoc 0.13 ();
-use Module::Install::VersionCheck 0.14 ();
-use IO::All 0.41;
-use YAML::XS 0.35 ();
+use Module::Install::Stardoc 0.18 ();
+use Module::Install::TestCommon 0.07 ();
+use Module::Install::VersionCheck 0.15 ();
 use Capture::Tiny 0.11 ();
+use IO::All 0.43;
+use Pegex 0.13 ();
+use Test::Base 0.60 ();
+use TestML 0.21 ();
+use YAML::XS 0.35 ();
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -39,9 +45,12 @@ sub main {
     my ($self) = @_;
 
     # These run before the Makefile.PL body. (During use inc::...)
+#     $self->mi->meta_module_compile
+#       if Module::Install::MetaModule->new->_has_meta();
     $self->mi->stardoc_make_pod;
     $self->mi->stardoc_clean_pod;
     $self->mi->readme_from($self->pod_or_pm_file);
+    $self->check_use_gloom;
     $self->check_use_test_base;
     $self->check_use_testml;
     $self->check_test_common;
