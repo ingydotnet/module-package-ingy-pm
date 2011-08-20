@@ -15,9 +15,9 @@ use 5.008003;
 use strict;
 package Module::Package::Ingy;
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
-use Module::Package 0.27 ();
+use Module::Package 0.28 ();
 use Module::Install::AckXXX 0.16 ();
 use Module::Install::AutoLicense 0.08 ();
 use Module::Install::GithubMeta 0.10 ();
@@ -27,6 +27,7 @@ use Module::Install::ReadmeFromPod 0.12 ();
 use Module::Install::RequiresList 0.10 ();
 use Module::Install::Stardoc 0.18 ();
 use Module::Install::TestCommon 0.07 ();
+use Module::Install::TestML 0.20 ();
 use Module::Install::VersionCheck 0.15 ();
 use Capture::Tiny 0.11 ();
 use IO::All 0.43;
