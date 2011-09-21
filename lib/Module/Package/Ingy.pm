@@ -15,7 +15,7 @@ use 5.008003;
 use strict;
 package Module::Package::Ingy;
 
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 
 use Module::Package 0.28 ();
 use Module::Install::AckXXX 0.16 ();
