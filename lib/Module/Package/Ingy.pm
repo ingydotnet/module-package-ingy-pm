@@ -7,17 +7,14 @@
 # see:
 # - Module::Package
 
-# TODO
+# TODO:
 # - Look at auto_provides
 # - Look at other plugins
 
 use 5.008003;
 use strict;
-package Module::Package::Ingy;
 
-our $VERSION = '0.16';
-
-use Module::Package 0.28 ();
+use Module::Package 0.29 ();
 use Module::Install::AckXXX 0.16 ();
 use Module::Install::AutoLicense 0.08 ();
 use Module::Install::GithubMeta 0.10 ();
@@ -29,8 +26,17 @@ use Module::Install::Stardoc 0.18 ();
 use Module::Install::TestCommon 0.07 ();
 use Module::Install::TestML 0.20 ();
 use Module::Install::VersionCheck 0.15 ();
+my $testbase_skip = "
+use Module::Install::TestBase 0;
+use Spiffy 0;
+use Test::More 0;
+use Test::Builder 0;
+use Test::Base::Filter 0;
+use Test::Builder::Module 0;
+";
+
 use Capture::Tiny 0.11 ();
-use IO::All 0.43;
+use IO::All 0.43 ();
 use Pegex 0.13 ();
 my $skip_pegex = "
 use Pegex::Mo 0;
@@ -43,7 +49,13 @@ use TestML 0.21 ();
 use YAML::XS 0.35 ();
 
 #-----------------------------------------------------------------------------#
+package Module::Package::Ingy;
+
+our $VERSION = '0.17';
+
+#-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
+# XXX Want to use Mo, but doesn't work yet for unknown reason.
 use Moo;
 extends 'Module::Package::Plugin';
 use IO::All;
@@ -85,6 +97,7 @@ release ::
 
 package Module::Package::Ingy;
 use Capture::Tiny qw(capture_merged);
+use IO::All;
 
 sub run {
     my $cmd = shift;

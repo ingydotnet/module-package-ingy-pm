@@ -1,4 +1,9 @@
 ---
+version: 0.17
+date:    Sun Sep 25 22:14:14 CEST 2011
+changes:
+- Ignore Test::Base deps in author deps
+---
 version: 0.16
 date:    Thu Sep 22 00:03:07 CEST 2011
 changes:
