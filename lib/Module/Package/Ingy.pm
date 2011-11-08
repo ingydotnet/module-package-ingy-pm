@@ -14,18 +14,18 @@
 use 5.008003;
 use strict;
 
-use Module::Package 0.29 ();
-use Module::Install::AckXXX 0.16 ();
+use Module::Package 0.30 ();
+use Module::Install::AckXXX 0.18 ();
 use Module::Install::AutoLicense 0.08 ();
-use Module::Install::GithubMeta 0.10 ();
-use Module::Install::Gloom 0.16 ();
+use Module::Install::GithubMeta 0.16 ();
+# use Module::Install::Gloom 0.16 ();
 # use Module::Install::MetaModule 0.01 ();
 use Module::Install::ReadmeFromPod 0.12 ();
 use Module::Install::RequiresList 0.10 ();
 use Module::Install::Stardoc 0.18 ();
 use Module::Install::TestCommon 0.07 ();
-use Module::Install::TestML 0.20 ();
-use Module::Install::VersionCheck 0.15 ();
+use Module::Install::TestML 0.26 ();
+use Module::Install::VersionCheck 0.16 ();
 my $testbase_skip = "
 use Module::Install::TestBase 0;
 use Spiffy 0;
@@ -36,8 +36,8 @@ use Test::Builder::Module 0;
 ";
 
 use Capture::Tiny 0.11 ();
-use IO::All 0.43 ();
-use Pegex 0.13 ();
+use IO::All 0.44 ();
+use Pegex 0.19 ();
 my $skip_pegex = "
 use Pegex::Mo 0;
 use Pegex::Grammar 0;
@@ -45,13 +45,13 @@ use Pegex::Parser 0;
 use Pegex::Receiver 0;
 ";
 use Test::Base 0.60 ();
-use TestML 0.21 ();
-use YAML::XS 0.35 ();
+use TestML 0.26 ();
+use YAML::XS 0.37 ();
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy;
 
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -69,7 +69,7 @@ sub main {
     $self->mi->stardoc_make_pod;
     $self->mi->stardoc_clean_pod;
     $self->mi->readme_from($self->pod_or_pm_file);
-    $self->check_use_gloom;
+#     $self->check_use_gloom;
     $self->check_use_test_base;
     $self->check_use_testml;
     $self->check_test_common;
@@ -137,11 +137,13 @@ sub make_release {
     die "'Changes' version '$changes_version' " .
         "does not match module version '$module_version'\n\n"
         unless $changes_version eq $module_version;
-    my @lines = map {chomp; $_} sort `git tag`;
-    my $tag_version = pop @lines or die;
-    die "Module version '$module_version' is not 0.01 greater " .
-        "than git tag version '$tag_version'"
-        if abs($module_version - $tag_version - 0.01) > 0.0000001;
+    if (@changes > 1) {
+        my @lines = map {chomp; $_} sort `git tag`;
+        my $tag_version = pop(@lines) || '0.00';
+        die "Module version '$module_version' is not 0.01 greater " .
+            "than git tag version '$tag_version'"
+            if abs($module_version - $tag_version - 0.01) > 0.0000001;
+    }
     my $date = `date`;
     chomp $date;
     my $Changes = io('Changes')->all;

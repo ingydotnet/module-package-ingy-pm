@@ -1,4 +1,11 @@
 ---
+version: 0.18
+date:    Mon Nov  7 20:24:32 PST 2011
+changes:
+- Support release version 0.01
+- Update versions
+- Get rid of Gloom support
+---
 version: 0.17
 date:    Sun Sep 25 22:14:14 CEST 2011
 changes:
