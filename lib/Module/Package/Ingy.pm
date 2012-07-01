@@ -51,7 +51,7 @@ use YAML::XS 0.37 ();
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy;
 
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -187,6 +187,8 @@ Relax. Have a beer. \\o/
 
 ...
 }
+
+1;
 
 =head1 SYNOPSIS
 

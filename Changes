@@ -1,4 +1,9 @@
 ---
+version: 0.19
+date:    Sun Jul  1 06:46:10 PDT 2012
+changes:
+- Return a true value
+---
 version: 0.18
 date:    Mon Nov  7 20:24:32 PST 2011
 changes:
