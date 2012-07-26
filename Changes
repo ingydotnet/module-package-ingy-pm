@@ -1,4 +1,9 @@
 ---
+version: 0.20
+date:    Wed Jul 25 21:10:50 PDT 2012
+changes:
+- Add support for Alt- modules.
+---
 version: 0.19
 date:    Sun Jul  1 06:46:10 PDT 2012
 changes:

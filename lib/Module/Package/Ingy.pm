@@ -14,6 +14,20 @@
 use 5.008003;
 use strict;
 
+# Don't load experimental (Alt-) modules
+{
+    my @inc;
+    BEGIN {
+        @inc = @INC;
+        @INC = grep not(/^lib$/), @INC;
+    }
+use IO::All 0.44 ();
+    use IO::All::File ();
+    BEGIN {
+        @INC = @inc;
+    }
+}
+
 use Module::Package 0.30 ();
 use Module::Install::AckXXX 0.18 ();
 use Module::Install::AutoLicense 0.08 ();
@@ -36,7 +50,6 @@ use Test::Builder::Module 0;
 ";
 
 use Capture::Tiny 0.11 ();
-use IO::All 0.44 ();
 use Pegex 0.19 ();
 my $skip_pegex = "
 use Pegex::Mo 0;
@@ -51,7 +64,7 @@ use YAML::XS 0.37 ();
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy;
 
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 
 #-----------------------------------------------------------------------------#
 package Module::Package::Ingy::modern;
@@ -137,13 +150,18 @@ sub make_release {
     die "'Changes' version '$changes_version' " .
         "does not match module version '$module_version'\n\n"
         unless $changes_version eq $module_version;
-    if (@changes > 1) {
-        my @lines = map {chomp; $_} sort `git tag`;
-        my $tag_version = pop(@lines) || '0.00';
-        die "Module version '$module_version' is not 0.01 greater " .
-            "than git tag version '$tag_version'"
-            if abs($module_version - $tag_version - 0.01) > 0.0000001;
-    }
+    (my $branch = `git branch`) =~ s/^.*\* (\S+).*$/$1/s or die;
+    my $tag_prefix = ($branch eq 'master') ? '' : "${branch}-";
+    my @lines = grep {
+        s/^${tag_prefix}(\d+\.\d+)$/$1/;
+    } map {
+        chomp;
+        $_;
+    } sort `git tag`;
+    my $tag_version = pop(@lines) or die "No relevant git tags!";
+    die "Module version '$module_version' is not 0.01 greater " .
+        "than git tag version '$tag_version'"
+        if abs($module_version - $tag_version - 0.01) > 0.0000001;
     my $date = `date`;
     chomp $date;
     my $Changes = io('Changes')->all;
@@ -161,7 +179,12 @@ sub make_release {
 
     run "perl -Ilib Makefile.PL", -quiet;
     run "make", -quiet;
-    run "sudo make install", -quiet;
+    if ($branch eq 'master') {
+        run "sudo -k make install", -quiet;
+    }
+    else {
+        run "sudo -k echo 'not installing'", -quiet;
+    }
     run "make purge", -quiet;
 
     io('Changes')->print($Changes);
@@ -171,7 +194,7 @@ sub make_release {
     run "make purge", -quiet;
 
     run qq{git commit -a -m "Released version $module_version"}, -quiet;
-    run "git tag $module_version", -quiet;
+    run "git tag $tag_prefix$module_version", -quiet;
     run "git push", -quiet;
     run "git push --tag", -quiet;
     $status = `git status`;
