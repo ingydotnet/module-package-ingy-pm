@@ -38,7 +38,7 @@ use Module::Install::ReadmeFromPod 0.12 ();
 use Module::Install::RequiresList 0.10 ();
 use Module::Install::Stardoc 0.18 ();
 use Module::Install::TestCommon 0.07 ();
-use Module::Install::TestML 0.26 ();
+use Module::Install::TestML 0.02 ();
 use Module::Install::VersionCheck 0.16 ();
 my $testbase_skip = "
 use Module::Install::TestBase 0;
